@@ -1,0 +1,94 @@
+<template>
+    <div>
+  <d3-network :net-nodes="nodes" :net-links="links" :options="options">
+  </d3-network>
+</div>
+</template>
+
+<script>
+
+import D3Network from 'vue-d3-network'
+
+export default {
+  components: {
+    D3Network,
+  },
+  props:['data'],
+  data () {
+    return {
+        nodes: [],
+        links: [],
+        options: {
+            force: 3000,
+            nodeSize: 50,
+            nodeLabels: true,
+            linkLabels:true,
+            canvas: false,
+            fontSize: 20,
+        }
+    }
+  },
+  mounted() {
+    this.fillData();
+  },
+  methods: {
+    async fillData(){
+      let i=1;
+      if(this.data) {
+         this.data.forEach(element => {
+            if(element.rating>3){
+                this.nodes.push({id: i, name: element.word, _color: 'green'});
+              }
+            if(element.rating==3){
+               this.nodes.push({id: i, name: element.word, _color: 'blue'});
+            }
+            if(element.rating<3){
+                this.nodes.push({id: i, name: element.word, _color: 'red'});
+           }
+         i=i+1;
+         });
+      }
+      this.data.forEach(element => {
+       element.edges.forEach(edge => {
+         let idOrigen, idDestino;
+
+         this.nodes.forEach(node  =>{
+           if(node.name==(element.word)){
+             idOrigen=node.id;
+           }
+           if(node.name==(edge))
+            idDestino=node.id;
+         })
+
+         if((element.edges.filter(i => i === edge).length)==1)
+            this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
+           'stroke-width': 1,
+           opacity: .3,
+            }});
+
+         if((element.edges.filter(i => i === edge).length)>=5)
+             this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
+           'stroke-width':3,
+            opacity: .3
+            }});
+
+         if((element.edges.filter(i => i === edge).length)>=10)
+         this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
+           'stroke-width':5,
+            opacity: .3
+            }});
+
+            if((element.edges.filter(i => i === edge).length)>=20)
+            this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
+              'stroke-width':9,
+               opacity: .3
+               }});
+
+       })
+     })
+    },
+  },
+}
+
+</script>
+<style src="vue-d3-network/dist/vue-d3-network.css"></style>
