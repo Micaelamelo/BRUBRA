@@ -1,7 +1,6 @@
 <template>
-  <div class="small">
+  <div>
     <line-chart :chart-data="datacollection" :options="this.options"></line-chart>
-<!--    <button @click="fillData()">Randomize</button> -->
   </div>
 </template>
 

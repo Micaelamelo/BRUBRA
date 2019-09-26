@@ -1,12 +1,11 @@
 <template>
-    <div>
   <d3-network :net-nodes="nodes" :net-links="links" :options="options">
   </d3-network>
-</div>
 </template>
 
-<script>
+<style scoped src="vue-d3-network/dist/vue-d3-network.css"></style>
 
+<script>
 import D3Network from 'vue-d3-network'
 
 export default {
@@ -37,13 +36,13 @@ export default {
       if(this.data) {
          this.data.forEach(element => {
             if(element.rating>3){
-                this.nodes.push({id: i, name: element.word, _color: 'green'});
+                this.nodes.push({id: i, name: element.word, _color: '#66b59a'});
               }
-            if(element.rating==3){
-               this.nodes.push({id: i, name: element.word, _color: 'blue'});
+            if(element.rating=3){
+               this.nodes.push({id: i, name: element.word, _color: '#4f90cc'});
             }
             if(element.rating<3){
-                this.nodes.push({id: i, name: element.word, _color: 'red'});
+                this.nodes.push({id: i, name: element.word, _color: '#ff7373'});
            }
          i=i+1;
          });
@@ -63,7 +62,7 @@ export default {
          if((element.edges.filter(i => i === edge).length)==1)
             this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
            'stroke-width': 1,
-           opacity: .3,
+           opacity: .1,
             }});
 
          if((element.edges.filter(i => i === edge).length)>=5)
@@ -75,13 +74,13 @@ export default {
          if((element.edges.filter(i => i === edge).length)>=10)
          this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
            'stroke-width':5,
-            opacity: .3
+            opacity: .5
             }});
 
             if((element.edges.filter(i => i === edge).length)>=20)
             this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
               'stroke-width':9,
-               opacity: .3
+               opacity: .9
                }});
 
        })
@@ -90,5 +89,4 @@ export default {
   },
 }
 
-</script>
-<style src="vue-d3-network/dist/vue-d3-network.css"></style>
+  </script>

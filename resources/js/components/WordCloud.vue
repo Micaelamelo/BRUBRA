@@ -7,6 +7,7 @@
 
 <script>
 import WordCloud from "vuewordcloud";
+
 export default {
 
   components: {
