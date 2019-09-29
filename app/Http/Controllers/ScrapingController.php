@@ -92,7 +92,7 @@ class ScrapingController extends Controller {
             $cambio=true;
           }
           else{
-            if($ultimo!=null && $cambio==true){  //esto se tendria q optimizar
+            if($ultimo!=null && $cambio==true){
               array_shift($contacts);
               $contact=[];
               $contact['fecha']= $ultimo['fecha'];
@@ -110,12 +110,14 @@ class ScrapingController extends Controller {
 
            array_unshift($contacts, $contact);
         }
+
+
       }
 
       try{
          if($browser->assertVisible('#feedback-next-link.a-link-normal')){ //click next
              $browser ->click('#feedback-next-link.a-link-normal')
-                      ->pause(5000);
+                      ->pause(1000);
        }
      }catch(\Exception $e){ //para la ultima pagina
         $frequent= $this->extract_common_words($comments, $palabras_colores);
@@ -133,6 +135,7 @@ class ScrapingController extends Controller {
         array_push($All_data, $data);
 
         return $All_data;
+
         }
 
     }
@@ -192,7 +195,7 @@ class ScrapingController extends Controller {
             }
         }
 
-        $word_count = str_word_count( implode(" ", $match_words) , 1);
+        $word_count = str_word_count(implode(" ", $match_words) , 1);
         $frequency = array_count_values($word_count);
         arsort($frequency);
 
@@ -200,19 +203,17 @@ class ScrapingController extends Controller {
         $keywords = array_slice($frequency, 0, $max_count);
 
         $keywords_array=[];
+          $suma=0;
         foreach ($keywords as $key => $value){
             $element=[];
             $element['word']=$key;
             $element['frequency']=$value;
 
-
-            $suma=0;
-            $cantidad=1;
             $edges= array();
+              $suma=0;
             foreach ($palabras_colores as $palabra){
                 if(stripos($palabra['comment'], $key) !== false){ //esto para los nodos
-                  $suma= $suma + $palabra['rating'];
-                  $cantidad=$cantidad+1;
+                  $suma= $suma + $palabra['rating'];  
 
                   foreach($keywords as $key2 => $value2){ //arcos
                     if($key!=$key2){
@@ -224,7 +225,7 @@ class ScrapingController extends Controller {
                 }
             }
 
-          $element['rating']=round($suma/$cantidad, 2);
+          $element['rating']=round($suma/$value,1);
           $element['edges']=$edges;
 
           array_push($keywords_array, $element);

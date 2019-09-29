@@ -1,6 +1,6 @@
 <template>
   <div class="cloud">
-    <vue-word-cloud :words="words" :color="([, , rating]) => rating>3 ? '#66b59a' : rating=3  ? '#4f90cc' : '#ff7373'" rotation=0 font-family="Roboto">
+    <vue-word-cloud :words="words" :color="([, , rating]) => rating>3 ? '#66b59a' : rating==3  ? '#4f90cc' : '#ff7373'" rotation=0 font-family="Roboto">
     </vue-word-cloud>
   </div>
 </template>

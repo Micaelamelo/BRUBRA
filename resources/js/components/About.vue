@@ -42,7 +42,7 @@
          <div class="w3-threequarter">
              <h1>Paso 3</h1>
              <h5 class="w3-padding-32 w3-justify">Aguardá unos segundos/minutos y podrás observar los gráficos correspondientes al análisis de los datos.
-            El tiempo del análisis es proporcional a la cantidad de reseñas que tenga el vendedor.
+            El tiempo de análisis es proporcional a la cantidad de reseñas que tenga el vendedor.
             A mayor cantidad de reseñas, mayor será el tiempo de espera.</h5>
          </div>
      </div>

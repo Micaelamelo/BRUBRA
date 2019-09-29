@@ -4,16 +4,24 @@
     <header class="w3-container w3-teal w3-center" style="padding:128px 16px">
         <h1 class="w3-margin w3-jumbo">BRUBRA</h1>
         <h4>V i s u a l i z a  n d o    R e p u t a c i ó n</h4>
-          <div class="w3-container w3-center"  style="margin: 25px 300px">
+          <div class="w3-container w3-center" style="margin: 25px 300px">
+          <loading :active.sync="visible" :can-cancel="false"></loading>
           <b-card>
             <b-input placeholder="Ingrese 'seller=ID' del vendedor deseado" v-model="search"></b-input>
-            <b-button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" @click="searchit">Visualizar</b-button>
+            <b-button v-show="habilitar" class="w3-button w3-black w3-padding-large w3-large w3-margin-top" @click.prevent="searchit">Visualizar</b-button>
+            <b-button v-show="!habilitar" class="w3-button w3-black w3-padding-large w3-large w3-margin-top" @click.prevent="nuevo">Nuevo</b-button>
           </b-card>
-
           </div>
     </header>
 
-    <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+    <b-modal ref="my-modal" hide-footer title="Error">
+      <div class="d-block text-center">
+        <h3>Ingrese seller=ID</h3>
+      </div>
+      <b-button class="mt-3" variant="outline-danger" block @click="hideModal">Cerrar</b-button>
+    </b-modal>
+
+    <div v-show="able" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
      <div class="w3-panel">
        <div class="w3-third">
           <visualizerb  v-if="able" v-bind:data="this.puntajes"></visualizerb>
@@ -34,7 +42,7 @@
      </div>
    </div>
 
-    <div class="w3-row-padding w3-padding-64 w3-container">
+    <div v-show="able" class="w3-row-padding w3-padding-64 w3-container">
         <div class="w3-content">
           <div class="w3-half">
               <h1>Datos a lo largo del tiempo</h1>
@@ -49,7 +57,7 @@
         </div>
       </div>
 
-      <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+      <div v-show="able" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
        <div class="w3-content">
          <div class="w3-center">
          <h1>Palabras frecuentes en reseñas</h1>
@@ -67,7 +75,7 @@
        </div>
      </div>
 
-     <div class="w3-row-padding w3-padding-64 w3-container">
+     <div v-show="able" class="w3-row-padding w3-padding-64 w3-container">
       <div class="w3-content">
         <div class="w3-center">
         <h1>Red de palabras frecuentes</h1>
@@ -98,6 +106,8 @@ import Chart from './Chart.vue'
 import WordCloud from './WordCloud.vue'
 import WordNetwork from './WordNetwork.vue'
 import DoughnutChart from './DoughnutChart.vue'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
     export default {
       components: {
@@ -106,31 +116,59 @@ import DoughnutChart from './DoughnutChart.vue'
           doughnut: DoughnutChart,
           wordcloud: WordCloud,
           wordnetwork: WordNetwork,
+          Loading,
       },
       data() {
           return {
-              search: '',
+              search: null,
               contacts: [], //para line CHART
               frequent: [], //para word cloud
               puntajes: [], //para barchart y doughnut
               able:false,
+              visible: false,
+              habilitar: true,
           }
       },
       methods : {
-           async searchit () {
-              console.log("al menos entra aca");
-               axios.get('/api/scraping/'+this.search)
-               .then(response => {
-                 console.log("entra");  //aca consigo toda la info
-                 response.data.forEach(element => {
-                    this.contacts=element.contacts;
-                    this.frequent=element.frequent;
-                    this.puntajes=element.puntajes;
-                  }
-                )
-                    this.able=true;
-               })
-          }
+        hideModal() {
+          this.$refs['my-modal'].hide()
+       },
+
+        nuevo(){
+            this.contacts=[];
+            this.frequent=[];
+            this.puntajes=[];
+            this.able=false;
+            this.visible=false;
+            this.habilitar=true;
+            this.search=null;
+        },
+
+       async searchit () {
+       if (this.search==null) {
+         this.$refs['my-modal'].show();
+       }
+       else {
+        this.visible = true
+        console.log("al menos entra aca");
+
+        axios.get('/api/scraping/'+this.search)
+         .then(response => {
+           this.habilitar= false;
+           this.visible = false;
+           console.log("entra");  //aca consigo toda la info
+           response.data.forEach(element => {
+              this.contacts=element.contacts;
+              this.frequent=element.frequent;
+              this.puntajes=element.puntajes;
+            })
+              this.able=true;
+         })
+         .catch((error) => {
+             this.visible = false;
+         })
+       }
+       }
       }
     }
 </script>

@@ -38,7 +38,7 @@ export default {
             if(element.rating>3){
                 this.nodes.push({id: i, name: element.word, _color: '#66b59a'});
               }
-            if(element.rating=3){
+            if(element.rating==3){
                this.nodes.push({id: i, name: element.word, _color: '#4f90cc'});
             }
             if(element.rating<3){
