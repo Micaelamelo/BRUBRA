@@ -138,37 +138,41 @@ import 'vue-loading-overlay/dist/vue-loading.css'
             this.contacts=[];
             this.frequent=[];
             this.puntajes=[];
+            this.todo=[];
             this.able=false;
             this.visible=false;
             this.habilitar=true;
             this.search=null;
         },
 
-       async searchit () {
-       if (this.search==null) {
-         this.$refs['my-modal'].show();
-       }
-       else {
-        this.visible = true
-        console.log("al menos entra aca");
+      async searchit () { ///saque async
+           if (this.search==null) {
+             this.$refs['my-modal'].show();
+           }
+           else {
+            this.visible = true
+            console.log("al menos entra aca");
 
-        axios.get('/api/scraping/'+this.search)
-         .then(response => {
-           this.habilitar= false;
-           this.visible = false;
-           console.log("entra");  //aca consigo toda la info
-           response.data.forEach(element => {
-              this.contacts=element.contacts;
-              this.frequent=element.frequent;
-              this.puntajes=element.puntajes;
-            })
-              this.able=true;
-         })
-         .catch((error) => {
-             this.visible = false;
-         })
-       }
-       }
+            await axios.get('/api/scraping/'+this.search)
+             .then(response => {
+               this.habilitar= false;
+               this.visible = false;
+               console.log("entra");  //aca consigo toda la info
+               this.todo= response.data;
+               this.todo.forEach(element => {
+                  this.contacts=element.contacts;
+                  this.frequent=element.frequent;
+                  this.puntajes=element.puntajes;
+                })
+                  this.able=true;
+             })
+             .catch((error) => {
+                console.log(error);
+                 this.visible = false;
+             })
+           }
       }
     }
+
+  }
 </script>

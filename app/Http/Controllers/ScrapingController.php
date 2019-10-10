@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Process\Process;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Http\Requests;
@@ -15,6 +16,7 @@ use Laravel\Dusk\Chrome\ChromeProcess;
 use Laravel\Dusk\ElementResolver;
 use Tests\DuskTestCase;
 use Exception;
+use Ping;
 
 class ScrapingController extends Controller {
 
@@ -35,7 +37,6 @@ class ScrapingController extends Controller {
     $browser = new Browser($driver);
     $base_url = "https://www.amazon.es/sp?$baseurl";
     $browser->visit($base_url);
-
     $comments="";
 
     $contacts=array();
@@ -52,8 +53,11 @@ class ScrapingController extends Controller {
 
     $palabras_colores= array();
 
+
+
     while($browser->elements('[id="feedback-next-link"]')){ //todas las reseñas
       foreach ($browser->elements('[class="feedback-row"]') as $element) {
+
           $comment = $element->findElement(WebDriverBy::cssSelector('[class="a-section a-spacing-small"]'))->getText(); //los comentarios
           $author_date = $element->findElement(WebDriverBy::cssSelector('span.a-size-base.a-color-secondary.feedback-rater'))->getText(); //los autores y fecha
           $ratings = $element->findElement(WebDriverBy::cssSelector('[class="a-icon-alt"]'))->getAttribute("textContent"); //el puntaje
@@ -134,7 +138,7 @@ class ScrapingController extends Controller {
         $data['contacts']= $contacts;
         array_push($All_data, $data);
 
-        return $All_data;
+        return  response()->json($All_data,201);
 
         }
 
@@ -213,7 +217,7 @@ class ScrapingController extends Controller {
               $suma=0;
             foreach ($palabras_colores as $palabra){
                 if(stripos($palabra['comment'], $key) !== false){ //esto para los nodos
-                  $suma= $suma + $palabra['rating'];  
+                  $suma= $suma + $palabra['rating'];
 
                   foreach($keywords as $key2 => $value2){ //arcos
                     if($key!=$key2){

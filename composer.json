@@ -13,8 +13,10 @@
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "jonnyw/php-phantomjs": "@dev",
+        "karlmonson/laravel-ping": "^1.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
+        "mydnic/laravel-allow-long-request": "^2.3",
         "symfony/finder": "^4.3",
         "symfony/panther": "^0.5.2",
         "symfony/process": "^4.3"

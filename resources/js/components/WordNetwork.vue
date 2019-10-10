@@ -62,25 +62,26 @@ export default {
          if((element.edges.filter(i => i === edge).length)==1)
             this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
            'stroke-width': 1,
-           opacity: .1,
             }});
+
+        if((element.edges.filter(i => i === edge).length)>=2 &&(element.edges.filter(i => i === edge).length)<5  )
+           this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
+          'stroke-width': 2,
+           }});
 
          if((element.edges.filter(i => i === edge).length)>=5)
              this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
            'stroke-width':3,
-            opacity: .3
             }});
 
          if((element.edges.filter(i => i === edge).length)>=10)
          this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
            'stroke-width':5,
-            opacity: .5
             }});
 
             if((element.edges.filter(i => i === edge).length)>=20)
             this.links.push({sid: idOrigen, tid: idDestino, _color:'black', _svgAttrs:{
               'stroke-width':9,
-               opacity: .9
                }});
 
        })
