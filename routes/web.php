@@ -22,21 +22,3 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 Route::get('/', function () {
     return view('content');
 });
-
-//Route::get('/scraping/{url}', 'ScrapingController@example');
-/*
-
-Route::get('/scraping', function () {
-
-    $process = new Process('cd C:\Users\miksm\OneDrive\Documentos\GitHub\Final\laravel-master && C:\xampp\php\php.exe artisan dusk -v');
-    $process->setPTY(true);
-    $process->run();
-
-  //  if (!$process->isSuccessful()) {
-  //      throw new ProcessFailedException($process);
-  //  }
-
-    echo '<pre>'.$process->getOutput();
-});
-
-*/

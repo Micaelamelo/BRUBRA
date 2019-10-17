@@ -50,14 +50,23 @@
     methods: {
       fillData () {
         let Years = new Array();
-
+/*
         if(this.data) {
                this.data.forEach(element => {
                Years.push(element.fecha);
                this.Ratings.push(element.rating);
                });
         }
-
+*/
+        if(this.data) {
+          this.data.map(contact=>{
+            contact.contacts.forEach(cont=>{
+              Years.push(cont.fecha);
+              this.Ratings.push(cont.rating);
+            })
+            })
+        }
+        
         this.datacollection = {
           labels: Years,
           datasets: [

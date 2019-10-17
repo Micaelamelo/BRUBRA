@@ -4,7 +4,7 @@
     <header class="w3-container w3-teal w3-center" style="padding:128px 16px">
         <h1 class="w3-margin w3-jumbo">BRUBRA</h1>
         <h4>V i s u a l i z a  n d o    R e p u t a c i ó n</h4>
-          <div class="w3-container w3-center" style="margin: 25px 300px">
+          <div class="w3-container w3-center">
           <loading :active.sync="visible" :can-cancel="false"></loading>
           <b-card>
             <b-input placeholder="Ingrese 'seller=ID' del vendedor deseado" v-model="search"></b-input>
@@ -21,11 +21,30 @@
       <b-button class="mt-3" variant="outline-danger" block @click="hideModal">Cerrar</b-button>
     </b-modal>
 
+    <b-modal ref="my-warning-modal" hide-footer title="Warning">
+      <div class="d-block text-center">
+        <h3>Por favor, vuelva a intentarlo</h3>
+      </div>
+      <b-button class="mt-3" variant="outline-warning" block @click="hideWarningModal">Cerrar</b-button>
+    </b-modal>
+
+    <div v-show="able" class="w3-row-padding w3-padding-64 w3-container">
+     <div class="w3-content">
+         <div class="w3-threequarter">
+             <h1>{{vendedor}}</h1>
+             <p class="w3-text-grey w3-justify">El vendedor {{vendedor}} fue analizado por última vez el día: {{creado}}
+                si quieres actualizar la información presioná el botón Actualizar.
+            </p>
+            <b-button class="mt-3" variant="outline-success">Actualizar</b-button>
+         </div>
+     </div>
+   </div>
+
     <div v-show="able" class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
      <div class="w3-panel">
        <div class="w3-third">
           <visualizerb  v-if="able" v-bind:data="this.puntajes"></visualizerb>
-       </div>
+        </div>
 
          <div class="w3-third w3-center">
              <h1>Datos univariantes</h1>
@@ -127,6 +146,8 @@ import 'vue-loading-overlay/dist/vue-loading.css'
               able:false,
               visible: false,
               habilitar: true,
+              vendedor: null,
+              creado: null,
           }
       },
       methods : {
@@ -134,42 +155,104 @@ import 'vue-loading-overlay/dist/vue-loading.css'
           this.$refs['my-modal'].hide()
        },
 
+       hideWarningModal() {
+         this.$refs['my-warning-modal'].hide()
+       },
+
         nuevo(){
             this.contacts=[];
             this.frequent=[];
             this.puntajes=[];
-            this.todo=[];
-            this.able=false;
-            this.visible=false;
-            this.habilitar=true;
-            this.search=null;
+            this.todo=[];           //toda info
+            this.able=false;        //para los graficos
+            this.visible=false;     //rueda espera
+            this.habilitar=true;    //boton visualizar/nuevo
+            this.search=null;       //url
+            this.vendedor=null;
+            this.creado=null;
         },
 
-      async searchit () { ///saque async
+      async searchit () {
            if (this.search==null) {
-             this.$refs['my-modal'].show();
+             this.$refs['my-modal'].show(); //modal de que no ingreso amazon seller ok
            }
            else {
-            this.visible = true
+            this.visible = true;             //ruedita de espera
             console.log("al menos entra aca");
 
-            await axios.get('/api/scraping/'+this.search)
+          await axios.get('/api/scraping/'+this.search) //busco si existe el nombre
              .then(response => {
-               this.habilitar= false;
-               this.visible = false;
-               console.log("entra");  //aca consigo toda la info
-               this.todo= response.data;
-               this.todo.forEach(element => {
-                  this.contacts=element.contacts;
-                  this.frequent=element.frequent;
-                  this.puntajes=element.puntajes;
-                })
+              console.log(response.data);
+              if(response.data){ //si existe (!=null) entonces obtengo los datos de la respuesta
+                console.log("entra a que no es null");
+            /*     this.todo= response.data;   //toda la info
+                 this.todo.forEach(element => {
+                    this.contacts=element.contacts;
+                    this.frequent=element.frequent;
+                    this.puntajes=element.puntajes;
+                  });
+                  */
+
+                  this.contacts= response.data[0];
+                  this.frequent= response.data[1];
+                  this.puntajes= response.data[2];
+                  this.vendedor= response.data[3][0].vendedor;
+                  this.creado= response.data[4][0].created_at;
+
+                  this.visible=false;
                   this.able=true;
+                  this.habilitar=false;
+              }
+              else{ //no existe (==null) entonces hago example y lo guardo
+                console.log("entra a que es null");
+                axios.get('api/scraping/url/'+this.search)
+                 .then(response => {
+                  console.log("entra a response");
+                  this.todo= response.data;   //toda la info
+
+                  let con; let freq; let pun; let ven;
+                  this.todo.forEach(element => {
+                     con=element.contacts;
+                     freq=element.frequent;
+                     pun=element.puntajes;
+                     ven=element.vendedor;
+                   });
+
+                     const page={
+                        contacts: con,
+                        frequent: freq,
+                        puntajes: pun,
+                        vendedor: ven,
+                     }
+
+                 axios.post('api/scraping/url/'+this.search, page).
+                 then(response => {
+                   console.log("se creo");
+                   axios.get('/api/scraping/'+this.search) //busco si existe el nombre
+                      .then(response => {
+                        this.contacts= response.data[0];
+                        this.frequent= response.data[1];
+                        this.puntajes= response.data[2];
+                        this.vendedor= response.data[3][0].vendedor;
+
+                        this.visible=false;
+                        this.able=true;
+                        this.habilitar=false;
+                    })
+                 });
+               }).catch((error) => {
+                  console.log(error);
+                  this.visible = false;                   //saca la ruedita de espera
+                  this.$refs['my-warning-modal'].show();  //modal de ERR CONNECTION RESET
+               });
+             }
+
              })
              .catch((error) => {
                 console.log(error);
-                 this.visible = false;
-             })
+                this.visible = false;                   //saca la ruedita de espera
+                this.$refs['my-warning-modal'].show();  //modal de ERR CONNECTION RESET
+             });
            }
       }
     }

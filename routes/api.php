@@ -13,8 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/scraping/{search}', 'ScrapingController@example');
+Route::post('/scraping/url/{search}','ScrapingController@store');
 
+Route::get('/scraping/{search}','ScrapingController@show');
+
+Route::get('/scraping/url/{search}','ScrapingController@example');
+
+Route::get('/pages','ScrapingController@index');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

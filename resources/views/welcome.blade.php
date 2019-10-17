@@ -49,14 +49,14 @@ h1,body,button {font-family: "Crimson Text", sans-serif;}
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-teal" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
         <a href="#" @click="menu=0" class="w3-bar-item w3-button w3-padding-large w3-hover-white" v-bind:class="{ 'w3-white': menu==0}">Home</a>
         <a href="#" @click="menu=1" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" v-bind:class="{ 'w3-white': menu==1}">¿Cómo funciona?</a>
-        <a href="#" @click="menu=2" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" v-bind:class="{ 'w3-white': menu==2}">Contacto</a>
+        <a href="#" @click="menu=2" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" v-bind:class="{ 'w3-white': menu==2}">Historial</a>
     </div>
 
     <!-- Navbar on small screens -->
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
         <a href="#" @click="menu=0" class="w3-bar-item w3-button w3-padding-large">Home</a>
         <a href="#" @click="menu=1" class="w3-bar-item w3-button w3-padding-large">¿Cómo funciona?</a>
-        <a href="#" @click="menu=2" class="w3-bar-item w3-button w3-padding-large">Contacto</a>
+        <a href="#" @click="menu=2" class="w3-bar-item w3-button w3-padding-large">Historial</a>
 
     </div>
     </div>

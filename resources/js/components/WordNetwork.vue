@@ -34,7 +34,8 @@ export default {
     async fillData(){
       let i=1;
       if(this.data) {
-         this.data.forEach(element => {
+         this.data.map(cont => {
+           cont.frequent.forEach(element => {
             if(element.rating>3){
                 this.nodes.push({id: i, name: element.word, _color: '#66b59a'});
               }
@@ -46,8 +47,11 @@ export default {
            }
          i=i+1;
          });
+       })
       }
-      this.data.forEach(element => {
+
+      this.data.map(cont => {
+      cont.frequent.forEach(element => {
        element.edges.forEach(edge => {
          let idOrigen, idDestino;
 
@@ -86,6 +90,7 @@ export default {
 
        })
      })
+    })
     },
   },
 }

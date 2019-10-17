@@ -17,8 +17,10 @@ use Laravel\Dusk\ElementResolver;
 use Tests\DuskTestCase;
 use Exception;
 use Ping;
+use App\Page;
 
 class ScrapingController extends Controller {
+
 
   public function example($baseurl) { //aca busco la info de todo y paso por prpops a cada clase lo correspondiente
 
@@ -37,6 +39,9 @@ class ScrapingController extends Controller {
     $browser = new Browser($driver);
     $base_url = "https://www.amazon.es/sp?$baseurl";
     $browser->visit($base_url);
+
+    $vendedor = $browser->driver->findElement(WebDriverBy::cssSelector('#sellerName'))->getText(); //los comentarios
+
     $comments="";
 
     $contacts=array();
@@ -53,8 +58,6 @@ class ScrapingController extends Controller {
 
     $palabras_colores= array();
 
-
-
     while($browser->elements('[id="feedback-next-link"]')){ //todas las reseñas
       foreach ($browser->elements('[class="feedback-row"]') as $element) {
 
@@ -70,13 +73,11 @@ class ScrapingController extends Controller {
 
           $comments= $comments . " " . $comment;
 
-
           $reverso=array_reverse($contacts);
           $ultimo= array_pop($reverso);
 
           $fecha=$this->fecha($author_date);
           $ratings=$this->rating($ratings);
-
 
           $palabra_color = [];
           $palabra_color['rating']= $ratings;
@@ -114,8 +115,6 @@ class ScrapingController extends Controller {
 
            array_unshift($contacts, $contact);
         }
-
-
       }
 
       try{
@@ -133,18 +132,50 @@ class ScrapingController extends Controller {
         array_push($puntajes, $puntaje);
 
         $data=[];
-        $data['frequent']= $frequent;
-        $data['puntajes']= $puntajes;
-        $data['contacts']= $contacts;
+        $data['frequent']= $frequent; //0
+        $data['puntajes']= $puntajes; //1
+        $data['contacts']= $contacts; //2
+        $data['vendedor']=$vendedor;  //3
         array_push($All_data, $data);
 
-        return  response()->json($All_data,201);
+        return response()->json($All_data, 201);
 
         }
+    }
+  }
 
+    public function index(){
+      $pages= Page::all();
+      return response()->json($pages);
     }
 
-  }
+      public function store(Request $request, $name){
+          $pagina= Page::create([
+                'name' => $name,
+                'frequent'=> $request->get('frequent'),
+                'puntajes'=> $request->get('puntajes'),
+                'contacts' => $request->get('contacts'),
+                'vendedor'=> $request->get('vendedor'),
+               ]
+           );
+      }
+
+      public function show($baseurl){
+        $pagina= Page::where('name', $baseurl)->first();
+
+        if($pagina==null){
+          return null;
+        }
+        else{
+              $contacts= Page::where('name', $baseurl)->get('contacts');
+              $frequent= Page::where('name', $baseurl)->get('frequent');
+              $puntajes= Page::where('name', $baseurl)->get('puntajes');
+              $vendedor= Page::where('name', $baseurl)->get('vendedor');
+              $creado= Page::where('name', $baseurl)->get('created_at');
+              $all= [$contacts, $frequent, $puntajes, $vendedor, $creado];
+            return response()->json($all, 201);
+        }
+      }
 
 
     public function fecha($author_date){ //me quedo con año

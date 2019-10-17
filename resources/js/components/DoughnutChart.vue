@@ -23,7 +23,7 @@
         let positivo=0;
         let negativo=0;
         let neutro=0;
-
+/*
         if(this.data) {
            this.data.forEach(element => {
               positivo=element.positivos;
@@ -31,6 +31,12 @@
               neutro=element.neutros;
            });
         }
+*/
+      this.data.map(puntaje=>{
+        positivo= puntaje.puntajes[0].positivos;
+        negativo= puntaje.puntajes[0].negativos;
+        neutro= puntaje.puntajes[0].neutros;
+        })
 
         let total= positivo+negativo+neutro;
 

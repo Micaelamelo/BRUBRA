@@ -26,12 +26,20 @@ export default {
   },
 
   methods: {
-  async getWords(){
-      if(this.data){
-        this.data.forEach(element => {
-            this.words.push([element.word , element.frequency, element.rating]);
-        })
-      }
+    async getWords(){
+
+        /*if(this.data){
+          this.data.forEach(element => {
+              this.words.push([element.word , element.frequency, element.rating]);
+          })
+        }*/
+        if(this.data){
+          this.data.map(cont => {
+            cont.frequent.forEach(element=>{
+              this.words.push([element.word , element.frequency, element.rating]);
+            })
+          })
+        }
     }
   }
 
