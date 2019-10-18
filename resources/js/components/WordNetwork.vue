@@ -18,8 +18,8 @@ export default {
         nodes: [],
         links: [],
         options: {
-            force: 3000,
-            nodeSize: 50,
+            force: 5000,
+            nodeSize: 60,
             nodeLabels: true,
             linkLabels:true,
             canvas: false,
@@ -36,13 +36,14 @@ export default {
       if(this.data) {
          this.data.map(cont => {
            cont.frequent.forEach(element => {
-            if(element.rating>3){
+            element.rating=parseInt(element.rating);
+            if((element.rating)>3){
                 this.nodes.push({id: i, name: element.word, _color: '#66b59a'});
-              }
-            if(element.rating==3){
+            }
+            else if((element.rating)==3){
                this.nodes.push({id: i, name: element.word, _color: '#4f90cc'});
             }
-            if(element.rating<3){
+            else if((element.rating)<3){
                 this.nodes.push({id: i, name: element.word, _color: '#ff7373'});
            }
          i=i+1;
@@ -94,5 +95,4 @@ export default {
     },
   },
 }
-
   </script>

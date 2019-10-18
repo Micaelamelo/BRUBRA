@@ -21,133 +21,106 @@ use App\Page;
 
 class ScrapingController extends Controller {
 
-
   public function example($baseurl) { //aca busco la info de todo y paso por prpops a cada clase lo correspondiente
-
-    $process = (new ChromeProcess)->toProcess();
-    $process->start(null, [
-        'SystemRoot' => 'C:\\WINDOWS',
-        'TEMP' => 'C:\Users\miksm\AppData\Local\Temp',
-    ]);
-
-    $options = (new ChromeOptions)->addArguments(['--disable-gpu', '--headless']);
-    $capabilities = DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options);
-    $driver = retry(5, function () use($capabilities) {
-        return RemoteWebDriver::create('http://localhost:9515', $capabilities);
-    }, 50);
-
-    $browser = new Browser($driver);
-    $base_url = "https://www.amazon.es/sp?$baseurl";
-    $browser->visit($base_url);
-
-    $vendedor = $browser->driver->findElement(WebDriverBy::cssSelector('#sellerName'))->getText(); //los comentarios
-
-    $comments="";
-
-    $contacts=array();
-    $acumulativo=1;
-    $incrementar=0;
-    $cambio=false;
-
-    $positivos=0;
-    $negativos=0;
-    $neutros=0;
-    $puntajes=array();
-
-    $All_data= array();
-
-    $palabras_colores= array();
-
-    while($browser->elements('[id="feedback-next-link"]')){ //todas las reseñas
-      foreach ($browser->elements('[class="feedback-row"]') as $element) {
-
-          $comment = $element->findElement(WebDriverBy::cssSelector('[class="a-section a-spacing-small"]'))->getText(); //los comentarios
-          $author_date = $element->findElement(WebDriverBy::cssSelector('span.a-size-base.a-color-secondary.feedback-rater'))->getText(); //los autores y fecha
-          $ratings = $element->findElement(WebDriverBy::cssSelector('[class="a-icon-alt"]'))->getAttribute("textContent"); //el puntaje
-
-          $comment = str_replace('á', 'a', $comment);
-          $comment = str_replace('é', 'e', $comment);
-          $comment = str_replace('í', 'i', $comment);
-          $comment = str_replace('ó', 'o', $comment);
-          $comment = str_replace('ú', 'u', $comment);
-
-          $comments= $comments . " " . $comment;
-
-          $reverso=array_reverse($contacts);
-          $ultimo= array_pop($reverso);
-
-          $fecha=$this->fecha($author_date);
-          $ratings=$this->rating($ratings);
-
-          $palabra_color = [];
-          $palabra_color['rating']= $ratings;
-          $palabra_color['comment']= $comment;
-          array_unshift($palabras_colores, $palabra_color);
-
-          if($ratings>3)
-            $positivos ++; //estos ya los podria tener desde gral rating
-          if($ratings==3)
-            $neutros ++;
-          if($ratings<3)
-            $negativos++;
-
-          if($ultimo!=null && strcmp($ultimo['fecha'],$fecha)==0){
-            $acumulativo=$acumulativo+1;
-            $incrementar=$incrementar+$ratings;
-            $cambio=true;
-          }
-          else{
-            if($ultimo!=null && $cambio==true){
-              array_shift($contacts);
-              $contact=[];
-              $contact['fecha']= $ultimo['fecha'];
-              $contact['rating']=($ultimo['rating']+$incrementar)/$acumulativo;
-              array_unshift($contacts, $contact);
-              $acumulativo=1;
-              $incrementar=0;
-              $cambio=false;
-
-            }
-
-          $contact=[];
-          $contact['fecha']= $this->fecha($author_date);
-          $contact['rating']=$ratings;
-
-           array_unshift($contacts, $contact);
-        }
-      }
-
-      try{
-         if($browser->assertVisible('#feedback-next-link.a-link-normal')){ //click next
-             $browser ->click('#feedback-next-link.a-link-normal')
-                      ->pause(1000);
+   $process = (new ChromeProcess)->toProcess();
+   $process->start(null, [
+       'SystemRoot' => 'C:\\WINDOWS',
+       'TEMP' => 'C:\Users\miksm\AppData\Local\Temp',
+   ]);
+   $options = (new ChromeOptions)->addArguments(['--disable-gpu', '--headless']);
+   $capabilities = DesiredCapabilities::chrome()->setCapability(ChromeOptions::CAPABILITY, $options);
+   $driver = retry(5, function () use($capabilities) {
+       return RemoteWebDriver::create('http://localhost:9515', $capabilities);
+   }, 50);
+   $browser = new Browser($driver);
+   $base_url = "https://www.amazon.es/sp?$baseurl";
+   $browser->visit($base_url);
+   $vendedor = $browser->driver->findElement(WebDriverBy::cssSelector('#sellerName'))->getText(); //los comentarios
+   $comments="";
+   $contacts=array();
+   $acumulativo=1;
+   $incrementar=0;
+   $cambio=false;
+   $positivos=0;
+   $negativos=0;
+   $neutros=0;
+   $puntajes=array();
+   $All_data= array();
+   $palabras_colores= array();
+   while($browser->elements('[id="feedback-next-link"]')){ //todas las reseñas
+     foreach ($browser->elements('[class="feedback-row"]') as $element) {
+         $comment = $element->findElement(WebDriverBy::cssSelector('[class="a-section a-spacing-small"]'))->getText(); //los comentarios
+         $author_date = $element->findElement(WebDriverBy::cssSelector('span.a-size-base.a-color-secondary.feedback-rater'))->getText(); //los autores y fecha
+         $ratings = $element->findElement(WebDriverBy::cssSelector('[class="a-icon-alt"]'))->getAttribute("textContent"); //el puntaje
+         $comment = str_replace('á', 'a', $comment);
+         $comment = str_replace('é', 'e', $comment);
+         $comment = str_replace('í', 'i', $comment);
+         $comment = str_replace('ó', 'o', $comment);
+         $comment = str_replace('ú', 'u', $comment);
+         $comments= $comments . " " . $comment;
+         $reverso=array_reverse($contacts);
+         $ultimo= array_pop($reverso);
+         $fecha=$this->fecha($author_date);
+         $ratings=$this->rating($ratings);
+         $palabra_color = [];
+         $palabra_color['rating']= $ratings;
+         $palabra_color['comment']= $comment;
+         array_unshift($palabras_colores, $palabra_color);
+         if($ratings>3)
+           $positivos ++; //estos ya los podria tener desde gral rating
+         if($ratings==3)
+           $neutros ++;
+         if($ratings<3)
+           $negativos++;
+         if($ultimo!=null && strcmp($ultimo['fecha'],$fecha)==0){
+           $acumulativo=$acumulativo+1;
+           $incrementar=$incrementar+$ratings;
+           $cambio=true;
+         }
+         else{
+           if($ultimo!=null && $cambio==true){
+             array_shift($contacts);
+             $contact=[];
+             $contact['fecha']= $ultimo['fecha'];
+             $contact['rating']=($ultimo['rating']+$incrementar)/$acumulativo;
+             array_unshift($contacts, $contact);
+             $acumulativo=1;
+             $incrementar=0;
+             $cambio=false;
+           }
+         $contact=[];
+         $contact['fecha']= $this->fecha($author_date);
+         $contact['rating']=$ratings;
+          array_unshift($contacts, $contact);
        }
-     }catch(\Exception $e){ //para la ultima pagina
-        $frequent= $this->extract_common_words($comments, $palabras_colores);
+     }
+     try{
+        if($browser->assertVisible('#feedback-next-link.a-link-normal')){ //click next
+            $browser ->click('#feedback-next-link.a-link-normal')
+                     ->pause(1000);
+      }
+    }catch(\Exception $e){ //para la ultima pagina
+       $frequent= $this->extract_common_words($comments, $palabras_colores);
+       $puntaje=[];
+       $puntaje['positivos']= $positivos;
+       $puntaje['neutros']= $neutros;
+       $puntaje['negativos']= $negativos;
+       array_push($puntajes, $puntaje);
+       $data=[];
+       $data['frequent']= $frequent; //0
+       $data['puntajes']= $puntajes; //1
+       $data['contacts']= $contacts; //2
+       $data['vendedor']=$vendedor;  //3
+       array_push($All_data, $data);
+       return response()->json($All_data, 201);
+       }
+     }
+   }
 
-        $puntaje=[];
-        $puntaje['positivos']= $positivos;
-        $puntaje['neutros']= $neutros;
-        $puntaje['negativos']= $negativos;
-        array_push($puntajes, $puntaje);
-
-        $data=[];
-        $data['frequent']= $frequent; //0
-        $data['puntajes']= $puntajes; //1
-        $data['contacts']= $contacts; //2
-        $data['vendedor']=$vendedor;  //3
-        array_push($All_data, $data);
-
-        return response()->json($All_data, 201);
-
-        }
-    }
-  }
-
-    public function index(){
-      $pages= Page::all();
-      return response()->json($pages);
-    }
+      public function index(){
+        $pages= Page::all();
+        return response()->json($pages);
+      }
 
       public function store(Request $request, $name){
           $pagina= Page::create([
@@ -158,6 +131,11 @@ class ScrapingController extends Controller {
                 'vendedor'=> $request->get('vendedor'),
                ]
            );
+      }
+
+      public function destroy($baseurl){
+        $pagina= Page::where('name', $baseurl)->first();
+        $pagina->delete();
       }
 
       public function show($baseurl){
@@ -218,8 +196,8 @@ class ScrapingController extends Controller {
 
         $string = preg_replace('/ss+/i', '', $string);
         $string = trim($string); // trim the string
-        $string = preg_replace('/[^a-zA-Z -]/', '', $string); // only take alphabet characters, but keep the spaces and dashes too…
-        $string = strtolower($string); // make it lowercase
+        $string = preg_replace('/[^a-zA-Z -]/', '', $string); // agarramos las letras, y espacios
+        $string = strtolower($string); // lo hacemos minuscula
 
         preg_match_all('/\b.*?\b/i', $string, $match_words);
         $match_words = $match_words[0];
@@ -246,11 +224,11 @@ class ScrapingController extends Controller {
 
             $edges= array();
               $suma=0;
-            foreach ($palabras_colores as $palabra){
+            foreach ($palabras_colores as $palabra){  //en cada comentario me fijo que palabras frecuentes existen
                 if(stripos($palabra['comment'], $key) !== false){ //esto para los nodos
-                  $suma= $suma + $palabra['rating'];
+                  $suma= $suma + $palabra['rating'];  //rating de la palabra
 
-                  foreach($keywords as $key2 => $value2){ //arcos
+                  foreach($keywords as $key2 => $value2){ //arcos, palabras q estan en el mismo comentario
                     if($key!=$key2){
                       if(stripos($palabra['comment'], $key2) !== false){
                         array_push($edges, $key2);

@@ -10,37 +10,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- Añadimos la libreria animate -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
+<link href="{{'css/welcome.css'}}" rel="stylesheet">
 <link href="{{asset('css/app.css')}}" rel="stylesheet">
-<style>
-h1,h2,h3,h4,h5,h6 {font-family: "Source Sans Pro", sans-serif}
-h1,body,button {font-family: "Crimson Text", sans-serif;}
-.w3-bar{font-family: "Roboto Slab"}
-.fa-anchor,.fa-coffee {font-size:200px}
-.header-page{
-    background-color: #0c5c5c;
-    padding-bottom: 4rem;
-    padding-top: 4rem;
-    margin-bottom: 4rem;
-    color: white;
-    font-weight: bold;
-}
-.btn-theme{
-    background-color:#0c5c5c;
-    color:white;
-}
-.img{
-    width:100%;
-}
-.img-about{
-    width:700px;
-    text-align: center;
-}
-</style>
 <body>
 <div id="app" >
     <!-- Navbar -->

@@ -1,0 +1,23 @@
+h1,h2,h3,h4,h5,h6 {font-family: "Source Sans Pro", sans-serif}
+h1,body,button {font-family: "Crimson Text", sans-serif;}
+.w3-bar{font-family: "Roboto Slab"}
+.fa-anchor,.fa-coffee {font-size:200px}
+.header-page{
+    background-color: #0c5c5c;
+    padding-bottom: 4rem;
+    padding-top: 4rem;
+    margin-bottom: 4rem;
+    color: white;
+    font-weight: bold;
+}
+.btn-theme{
+    background-color:#0c5c5c;
+    color:white;
+}
+.img{
+    width:100%;
+}
+.img-about{
+    width:700px;
+    text-align: center;
+}

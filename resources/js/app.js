@@ -11,12 +11,18 @@ import VueCharts from 'vue-chartjs'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import Routes from './routes'
 
 require('./bootstrap');
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
+//Vue.use(VueRouter);
 
-
+/*
+const router= new VueRouter({
+  routes: Routes,
+});
+*/
 window.Vue = require('vue');
 
 /**
@@ -41,6 +47,7 @@ Vue.component('about-page', require('./components/About.vue').default);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
 new Vue({
   el: '#app',
   data:{

@@ -21,6 +21,8 @@ Route::get('/scraping/url/{search}','ScrapingController@example');
 
 Route::get('/pages','ScrapingController@index');
 
+Route::delete('/scraping/{search}', 'ScrapingController@destroy');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

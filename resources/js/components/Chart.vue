@@ -1,9 +1,13 @@
 <template>
+  <div>
     <bar-chart :chart-data="datacollection"></bar-chart>
-</template>
 
+    <p class="w3-text-grey w3-justify"> Total: {{total}}</p>
+  </div>
+</template>
 <script>
   import BarChart from './BarChart.js'
+  import  "./css/chart.css";
 
   export default {
     components: {
@@ -12,6 +16,7 @@
     props:['data'],
     data () {
       return {
+        total: 0,
         datacollection: null
       }
     },
@@ -38,6 +43,7 @@
           neutro= puntaje.puntajes[0].neutros;
           })
 
+        this.total=positivo+negativo+neutro;
 
         this.datacollection = {
           labels: ['Positivos', 'Neutros', 'Negativos'],
@@ -53,10 +59,3 @@
     }
   }
 </script>
-
-<style>
-  .small {
-    max-width: 600px;
-    margin:  150px auto;
-  }
-</style>

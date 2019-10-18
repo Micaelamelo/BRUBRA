@@ -2,23 +2,29 @@
   <div class="cloud">
     <vue-word-cloud :words="words" :color="([, , rating]) => rating>3 ? '#66b59a' : rating==3  ? '#4f90cc' : '#ff7373'" rotation=0 font-family="Roboto">
     </vue-word-cloud>
+    <p>
+
+    </p>
+     Frecuencia:
+    <template v-for="[w, f, r] in words">
+        <span class="w3-text-grey w3-justify" > {{w}}({{f}}) - </span>  <slot></slot>
+    </template>
   </div>
 </template>
 
 <script>
-import WordCloud from "vuewordcloud";
+import VueWordCloud from "vuewordcloud";
 
 export default {
-
   components: {
-    WordCloud
+    VueWordCloud,
   },
   props:['data'],
   data() {
     return {
       toggleOn: true,
       words: [],
-
+      palabras: [],
     };
   },
   mounted() {
@@ -36,6 +42,7 @@ export default {
         if(this.data){
           this.data.map(cont => {
             cont.frequent.forEach(element=>{
+              element.rating=parseInt(element.rating);
               this.words.push([element.word , element.frequency, element.rating]);
             })
           })

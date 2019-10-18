@@ -4,6 +4,7 @@
 
 <script>
   import DoughnutChart from './DoughnutChart.js'
+  import  "./css/doughnut.css";
 
   export default {
     components: {
@@ -59,10 +60,3 @@
     }
   }
 </script>
-
-<style>
-  .small {
-    max-width: 600px;
-    margin:  150px auto;
-  }
-</style>

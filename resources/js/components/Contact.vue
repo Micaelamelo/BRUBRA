@@ -10,6 +10,7 @@
                   <li v-for="page in pages">
                      {{page.vendedor}} - {{ page.name }} Fue analizado por última vez {{page.created_at}}
                   </li> -->
+                  <div style="overflow: scroll">
 
                   <table id="firstTable">
                   <thead>
@@ -27,6 +28,8 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
             </div>
 
             </div>
@@ -36,6 +39,7 @@
 
 <script>
 import axios from 'axios'
+import  "./css/contact.css";
 
   export default {
     data(){
@@ -52,32 +56,3 @@ import axios from 'axios'
     }
   }
 </script>
-
-<style>
-table {
-  font-family: 'Roboto', sans-serif;
-  width: 750px;
-  border-collapse: collapse;
-  border: 3px solid #44475C;
-  margin: 10px 10px 0 10px;
-}
-table th {
-  text-transform: uppercase;
-  text-align: left;
-  background: #257a7c;
-  color: #FFF;
-  padding: 8px;
-  min-width: 30px;
-}
-table td {
-  text-align: left;
-  padding: 8px;
-  border-right: 2px solid #7D82A8;
-}
-table td:last-child {
-  border-right: none;
-}
-table tbody tr:nth-child(2n) td {
-  background: #bfe7e7;
-}
-</style>

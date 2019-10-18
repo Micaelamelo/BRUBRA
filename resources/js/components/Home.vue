@@ -33,9 +33,9 @@
          <div class="w3-threequarter">
              <h1>{{vendedor}}</h1>
              <p class="w3-text-grey w3-justify">El vendedor {{vendedor}} fue analizado por última vez el día: {{creado}}
-                si quieres actualizar la información presioná el botón Actualizar.
+                si quieres actualizar su información presiona el botón Eliminar y luego, vuelve a analizar su código.
             </p>
-            <b-button class="mt-3" variant="outline-success">Actualizar</b-button>
+            <b-button class="mt-3"  variant="outline-danger" @click="update">Eliminar</b-button>
          </div>
      </div>
    </div>
@@ -143,6 +143,7 @@ import 'vue-loading-overlay/dist/vue-loading.css'
               contacts: [], //para line CHART
               frequent: [], //para word cloud
               puntajes: [], //para barchart y doughnut
+              todo: [],
               able:false,
               visible: false,
               habilitar: true,
@@ -178,13 +179,10 @@ import 'vue-loading-overlay/dist/vue-loading.css'
            }
            else {
             this.visible = true;             //ruedita de espera
-            console.log("al menos entra aca");
-
           await axios.get('/api/scraping/'+this.search) //busco si existe el nombre
              .then(response => {
-              console.log(response.data);
+               console.log(response.data);
               if(response.data){ //si existe (!=null) entonces obtengo los datos de la respuesta
-                console.log("entra a que no es null");
             /*     this.todo= response.data;   //toda la info
                  this.todo.forEach(element => {
                     this.contacts=element.contacts;
@@ -204,10 +202,10 @@ import 'vue-loading-overlay/dist/vue-loading.css'
                   this.habilitar=false;
               }
               else{ //no existe (==null) entonces hago example y lo guardo
-                console.log("entra a que es null");
+                console.log("no existe");
                 axios.get('api/scraping/url/'+this.search)
                  .then(response => {
-                  console.log("entra a response");
+                   console.log(response.data);
                   this.todo= response.data;   //toda la info
 
                   let con; let freq; let pun; let ven;
@@ -225,7 +223,7 @@ import 'vue-loading-overlay/dist/vue-loading.css'
                         vendedor: ven,
                      }
 
-                 axios.post('api/scraping/url/'+this.search, page).
+              axios.post('api/scraping/url/'+this.search, page).
                  then(response => {
                    console.log("se creo");
                    axios.get('/api/scraping/'+this.search) //busco si existe el nombre
@@ -234,6 +232,7 @@ import 'vue-loading-overlay/dist/vue-loading.css'
                         this.frequent= response.data[1];
                         this.puntajes= response.data[2];
                         this.vendedor= response.data[3][0].vendedor;
+                        this.creado= response.data[4][0].created_at;
 
                         this.visible=false;
                         this.able=true;
@@ -254,7 +253,17 @@ import 'vue-loading-overlay/dist/vue-loading.css'
                 this.$refs['my-warning-modal'].show();  //modal de ERR CONNECTION RESET
              });
            }
+      },
+
+      update(){
+        axios.delete('api/scraping/'+this.search).
+          then(response => {
+              console.log("se elimino");
+              this.nuevo();
+              window.location.reload();
+           })
       }
+
     }
 
   }
