@@ -12,7 +12,7 @@ Esta aplicación web fue construida utilizando:
 
 # Funcionalidad
 
-BRUBRA escanea los perfiles de reputación de un vendedor deseado a través de la técnica web scraping. Extrae toda la información necesaria como total de reseñas, el contenido de las mismas, cantidad de valoraciones, entre otros. Una vez reunida toda la información muestra por pantalla divesos gráficos para visualizar de distinta manera la información recolectada. 
+BRUBRA escanea la página del perfil de reputación de un vendedor deseado (de Amazon ES) a través de la técnica web scraping. Extrae toda la información relacionada a las reseñas: contenido, fecha y valoracion. Finalizada la extracción de datos, muestra por pantalla diversos gráficos que visualizan en detalle la evolución de la reputación del vendedor durante toda su vida en Amazon ES.
 
 
 Para más información: https://micaelamelo.wordpress.com/portfolio/brubra/
