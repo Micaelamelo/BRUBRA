@@ -8,5 +8,6 @@ Esta aplicación web fue construida utilizando:
 - Laravel  
 - Vue.js  
 - Laravel Dusk 
+- MySQL
 
 
